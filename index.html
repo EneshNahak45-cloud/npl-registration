@@ -144,19 +144,31 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// 🔐 ADMIN SYSTEM
-const ADMIN_PASSWORD = "12345"; // change this
-let isAdmin = false;
+// 🔐 ADMIN SYSTEM (FIXED)
+const ADMIN_PASSWORD = "12345";
+let isAdmin = localStorage.getItem("isAdmin") === "true";
 
 window.enableAdmin = function() {
     let pass = prompt("Enter Admin Password:");
     if(pass === ADMIN_PASSWORD) {
         isAdmin = true;
+        localStorage.setItem("isAdmin", "true");
         alert("Admin mode ON");
-        location.reload();
+
+        // 🔥 refresh UI instantly
+        if(currentSnapshot) renderData(currentSnapshot);
+
     } else {
         alert("Wrong password");
     }
+};
+
+window.logoutAdmin = function() {
+    localStorage.removeItem("isAdmin");
+    isAdmin = false;
+    alert("Logged out");
+
+    if(currentSnapshot) renderData(currentSnapshot);
 };
 
 // 🔄 Section change
@@ -191,8 +203,16 @@ window.deletePlayer = async function(id) {
     await deleteDoc(doc(db, "players", id));
 };
 
-// 🔄 Real-time update
+// 🔥 SNAPSHOT + RENDER FIX
+let currentSnapshot = null;
+
 onSnapshot(collection(db, "players"), (snapshot) => {
+    currentSnapshot = snapshot;
+    renderData(snapshot);
+});
+
+// 🔥 RENDER FUNCTION
+function renderData(snapshot) {
 
     let batterHTML = "", bowlerHTML = "", allrounderHTML = "";
 
@@ -219,7 +239,7 @@ onSnapshot(collection(db, "players"), (snapshot) => {
     document.getElementById("batterTable").innerHTML = batterHTML;
     document.getElementById("bowlerTable").innerHTML = bowlerHTML;
     document.getElementById("allrounderTable").innerHTML = allrounderHTML;
-});
+}
 
 </script>
 
