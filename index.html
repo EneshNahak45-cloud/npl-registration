@@ -6,115 +6,67 @@
 <title>NPL Registration</title>
 
 <style>
-    * {
-        box-sizing: border-box;
-    }
+* { box-sizing: border-box; }
+body { font-family: Arial; margin: 0; background: #f4f4f4; }
 
-    body {
-        font-family: Arial;
-        margin: 0;
-        background: #f4f4f4;
-    }
+header {
+    background: #2c3e50;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 22px;
+}
 
-    header {
-        background: #2c3e50;
-        color: white;
-        padding: 15px;
-        text-align: center;
-        font-size: 22px;
-    }
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    background: #34495e;
+}
 
-    nav {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        background: #34495e;
-    }
+nav button {
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    background: #1abc9c;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
 
-    nav button {
-        padding: 10px;
-        margin: 5px;
-        border: none;
-        background: #1abc9c;
-        color: white;
-        cursor: pointer;
-        border-radius: 5px;
-        font-size: 14px;
-    }
+.section { display: none; padding: 20px; text-align: center; }
+.active { display: block; }
 
-    nav button:hover {
-        background: #16a085;
-    }
+input {
+    padding: 10px;
+    margin: 10px 0;
+    width: 90%;
+    max-width: 300px;
+}
 
-    .section {
-        display: none;
-        padding: 20px;
-        text-align: center;
-    }
+.btn {
+    padding: 10px 20px;
+    background: #e67e22;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
 
-    .active {
-        display: block;
-    }
+.table-container { overflow-x: auto; }
 
-    input {
-        padding: 10px;
-        margin: 10px 0;
-        width: 90%;
-        max-width: 300px;
-        font-size: 14px;
-    }
+table {
+    margin-top: 20px;
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
 
-    .btn {
-        padding: 10px 20px;
-        background: #e67e22;
-        border: none;
-        color: white;
-        cursor: pointer;
-        border-radius: 5px;
-    }
+table, th, td { border: 1px solid black; }
+th, td { padding: 10px; }
 
-    .btn:hover {
-        background: #d35400;
-    }
-
-    /* Table Responsive */
-    .table-container {
-        overflow-x: auto;
-    }
-
-    table {
-        margin-top: 20px;
-        width: 100%;
-        border-collapse: collapse;
-        background: white;
-        min-width: 250px;
-    }
-
-    table, th, td {
-        border: 1px solid black;
-    }
-
-    th, td {
-        padding: 10px;
-        text-align: center;
-    }
-
-    /* 📱 Mobile Styling */
-    @media (max-width: 600px) {
-        header {
-            font-size: 18px;
-            padding: 10px;
-        }
-
-        nav button {
-            font-size: 12px;
-            padding: 8px;
-        }
-
-        h2 {
-            font-size: 18px;
-        }
-    }
+@media (max-width: 600px) {
+    header { font-size: 18px; }
+}
 </style>
 </head>
 
@@ -131,7 +83,6 @@
     <button onclick="showSection('allrounderList')">All-Rounder List</button>
 </nav>
 
-<!-- Registration Sections -->
 <div id="batter" class="section active">
     <h2>Batter Registration</h2>
     <input type="text" id="batterName" placeholder="Enter Name">
@@ -153,7 +104,6 @@
     <button class="btn" onclick="registerPlayer('All-Rounder')">Register</button>
 </div>
 
-<!-- Lists -->
 <div id="batterList" class="section">
     <h2>Batter List</h2>
     <div class="table-container">
@@ -175,72 +125,15 @@
     </div>
 </div>
 
-<script>
-let batters = [];
-let bowlers = [];
-let allrounders = [];
+<script type="module">
 
-function showSection(id) {
-    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-
-    if(id === "batterList") displayBatters();
-    if(id === "bowlerList") displayBowlers();
-    if(id === "allrounderList") displayAllrounders();
-}
-
-function registerPlayer(type) {
-    let name = "";
-
-    if(type === "Batter") {
-        name = document.getElementById("batterName").value;
-        if(name) batters.push(name);
-    }
-    else if(type === "Bowler") {
-        name = document.getElementById("bowlerName").value;
-        if(name) bowlers.push(name);
-    }
-    else {
-        name = document.getElementById("allrounderName").value;
-        if(name) allrounders.push(name);
-    }
-
-    if(name === "") {
-        alert("Enter name!");
-        return;
-    }
-
-    alert(type + " Registered!");
-
-    document.getElementById("batterName").value = "";
-    document.getElementById("bowlerName").value = "";
-    document.getElementById("allrounderName").value = "";
-}
-
-function displayBatters() {
-    document.getElementById("batterTable").innerHTML =
-        batters.map(n => `<tr><td>${n}</td></tr>`).join("");
-}
-
-function displayBowlers() {
-    document.getElementById("bowlerTable").innerHTML =
-        bowlers.map(n => `<tr><td>${n}</td></tr>`).join("");
-}
-
-function displayAllrounders() {
-    document.getElementById("allrounderTable").innerHTML =
-        allrounders.map(n => `<tr><td>${n}</td></tr>`).join("");
-}
-
- type="module">
-
-// Firebase import
+// 🔥 Firebase import
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// 🔑 Paste YOUR config here
+// 🔑 PASTE YOUR REAL CONFIG HERE
 const firebaseConfig = {
-  apiKey: "YOUR_REAL_KEY",
+  apiKey: "YOUR_KEY",
   authDomain: "YOUR_DOMAIN",
   projectId: "YOUR_PROJECT_ID",
   storageBucket: "YOUR_BUCKET",
@@ -248,11 +141,16 @@ const firebaseConfig = {
   appId: "YOUR_APP_ID"
 };
 
-// Initialize
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Register function
+// 🔥 Show sections
+window.showSection = function(id) {
+    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+};
+
+// 🔥 Register player
 window.registerPlayer = async function(type) {
     let name = "";
 
@@ -273,7 +171,7 @@ window.registerPlayer = async function(type) {
     alert("Registered!");
 };
 
-// Real-time display
+// 🔥 Real-time data
 onSnapshot(collection(db, "players"), (snapshot) => {
     let batters = [], bowlers = [], allrounders = [];
 
