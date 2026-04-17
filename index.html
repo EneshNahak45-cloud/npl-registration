@@ -153,6 +153,7 @@ window.enableAdmin = function() {
     if(pass === ADMIN_PASSWORD) {
         isAdmin = true;
         alert("Admin mode ON");
+        location.reload();
     } else {
         alert("Wrong password");
     }
