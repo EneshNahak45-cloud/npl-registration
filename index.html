@@ -231,6 +231,69 @@ function displayAllrounders() {
     document.getElementById("allrounderTable").innerHTML =
         allrounders.map(n => `<tr><td>${n}</td></tr>`).join("");
 }
+
+ type="module">
+
+// Firebase import
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// 🔑 Paste YOUR config here
+const firebaseConfig = {
+  apiKey: "YOUR_REAL_KEY",
+  authDomain: "YOUR_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_BUCKET",
+  messagingSenderId: "YOUR_ID",
+  appId: "YOUR_APP_ID"
+};
+
+// Initialize
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Register function
+window.registerPlayer = async function(type) {
+    let name = "";
+
+    if(type === "Batter") name = document.getElementById("batterName").value;
+    else if(type === "Bowler") name = document.getElementById("bowlerName").value;
+    else name = document.getElementById("allrounderName").value;
+
+    if(name === "") {
+        alert("Enter name!");
+        return;
+    }
+
+    await addDoc(collection(db, "players"), {
+        name: name,
+        type: type
+    });
+
+    alert("Registered!");
+};
+
+// Real-time display
+onSnapshot(collection(db, "players"), (snapshot) => {
+    let batters = [], bowlers = [], allrounders = [];
+
+    snapshot.forEach(doc => {
+        let data = doc.data();
+        if(data.type === "Batter") batters.push(data.name);
+        else if(data.type === "Bowler") bowlers.push(data.name);
+        else allrounders.push(data.name);
+    });
+
+    document.getElementById("batterTable").innerHTML =
+        batters.map(n => `<tr><td>${n}</td></tr>`).join("");
+
+    document.getElementById("bowlerTable").innerHTML =
+        bowlers.map(n => `<tr><td>${n}</td></tr>`).join("");
+
+    document.getElementById("allrounderTable").innerHTML =
+        allrounders.map(n => `<tr><td>${n}</td></tr>`).join("");
+});
+
 </script>
 
 </body>
